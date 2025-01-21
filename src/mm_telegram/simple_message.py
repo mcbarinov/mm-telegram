@@ -1,8 +1,7 @@
 import time
 
 import pydash
-from mm_std import Err, Ok, Result
-from mm_std.net import hrequest
+from mm_std import Err, Ok, Result, hr
 
 
 def send_telegram_message(bot_token: str, chat_id: int, message: str, long_message_delay: int = 3) -> Result[list[int]]:
@@ -12,7 +11,7 @@ def send_telegram_message(bot_token: str, chat_id: int, message: str, long_messa
     while True:
         text = messages.pop(0)
         params = {"chat_id": chat_id, "text": text}
-        res = hrequest(f"https://api.telegram.org/bot{bot_token}/sendMessage", method="post", params=params)
+        res = hr(f"https://api.telegram.org/bot{bot_token}/sendMessage", method="post", params=params)
         responses.append(res.json)
         if res.error is not None:
             return Err(res.error, data={"last_res": res.to_dict(), "responses": responses})
