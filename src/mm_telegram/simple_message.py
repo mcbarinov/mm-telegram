@@ -1,8 +1,8 @@
+import asyncio
 import time
 
-import anyio
 import pydash
-from mm_std import Err, Ok, Result, ahr, hr
+from mm_std import Err, Ok, Result, hr, hra
 
 
 def send_message(bot_token: str, chat_id: int, message: str, long_message_delay: int = 3) -> Result[list[int]]:
@@ -37,7 +37,7 @@ async def async_send_message(bot_token: str, chat_id: int, message: str, long_me
     while True:
         text = messages.pop(0)
         params = {"chat_id": chat_id, "text": text}
-        res = await ahr(f"https://api.telegram.org/bot{bot_token}/sendMessage", method="post", params=params)
+        res = await hra(f"https://api.telegram.org/bot{bot_token}/sendMessage", method="post", params=params)
         responses.append(res.json)
         if res.error is not None:
             return Err(res.error, data={"last_res": res.to_dict(), "responses": responses})
@@ -49,7 +49,7 @@ async def async_send_message(bot_token: str, chat_id: int, message: str, long_me
             return Err("unknown_response", data={"last_res": res.to_dict(), "responses": responses})
 
         if len(messages):
-            await anyio.sleep(long_message_delay)
+            await asyncio.sleep(long_message_delay)
         else:
             break
     return Ok(result, data={"responses": responses})

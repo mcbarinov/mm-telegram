@@ -3,11 +3,6 @@ from mm_std import get_dotenv
 
 
 @pytest.fixture
-def anyio_backend():
-    return "asyncio"
-
-
-@pytest.fixture
 def telegram_token() -> str:
     return get_dotenv("TELEGRAM_TOKEN")
 
