@@ -12,20 +12,20 @@ async def send_message(bot_token: str, chat_id: int, message: str, long_message_
         params = {"chat_id": chat_id, "text": text}
         res = await http_request(f"https://api.telegram.org/bot{bot_token}/sendMessage", method="post", json=params)
         responses.append(res.to_dict())
-        if res.is_error():
-            return Result.failure(res.error or "error", extra={"responses": [responses]})
+        if res.is_err():
+            return Result.err(res.error or "error", extra={"responses": [responses]})
 
         message_id = res.parse_json_body("result.message_id", none_on_error=True)
         if message_id:
             result.append(message_id)
         else:
-            return Result.failure("unknown_response", extra={"responses": responses})
+            return Result.err("unknown_response", extra={"responses": responses})
 
         if len(messages):
             await asyncio.sleep(long_message_delay)
         else:
             break
-    return Result.success(result, extra={"responses": responses})
+    return Result.ok(result, extra={"responses": responses})
 
 
 def _split_string(text: str, chars_per_string: int) -> list[str]:
