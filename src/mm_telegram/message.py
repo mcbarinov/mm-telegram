@@ -1,6 +1,7 @@
 import asyncio
 
-from mm_std import Result, http_request
+from mm_http import http_request
+from mm_result import Result
 
 
 async def send_message(

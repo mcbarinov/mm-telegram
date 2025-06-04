@@ -22,16 +22,22 @@ type TelegramHandler = BaseHandler[Any, CallbackContext[ExtBot[None], dict[Any, 
 
 
 async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Responds with 'pong' to /ping command."""
     if update.effective_chat is not None:
         await context.bot.send_message(chat_id=update.effective_chat.id, text="pong")
 
 
 async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handles unknown commands with a default response."""
     if update.effective_chat is not None:
         await context.bot.send_message(chat_id=update.effective_chat.id, text="Sorry, I didn't understand that command.")
 
 
 async def is_admin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Checks if user is admin and blocks access if not.
+
+    Raises ApplicationHandlerStop if user is not in the admins list.
+    """
     admins: list[int] = context.bot_data.get("admins", [])
 
     if update.effective_user is None or update.message is None:
@@ -44,14 +50,21 @@ async def is_admin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 class TelegramBot:
+    """Telegram bot wrapper that manages application lifecycle and handlers."""
+
     app: Application[Any, Any, Any, Any, Any, Any] | None
 
     def __init__(self, handlers: list[TelegramHandler], bot_data: dict[str, object]) -> None:
+        """Initialize bot with custom handlers and initial bot data."""
         self.handlers = handlers
         self.bot_data = bot_data
         self.app = None
 
     async def start(self, token: str, admins: list[int]) -> None:
+        """Start the bot with given token and admin list.
+
+        Raises ValueError if no admins are provided.
+        """
         if not admins:
             raise ValueError("No admins provided")
         logger.debug("Starting telegram bot...")
@@ -75,6 +88,7 @@ class TelegramBot:
         self.app = app
 
     async def shutdown(self) -> None:
+        """Stop the bot and clean up resources."""
         if self.app is not None:
             await self.app.shutdown()
             self.app = None
