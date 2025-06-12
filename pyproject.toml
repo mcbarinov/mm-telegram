@@ -1,11 +1,10 @@
 [project]
 name = "mm-telegram"
-version = "0.3.0"
+version = "0.3.1"
 description = ""
 requires-python = ">=3.13"
 dependencies = [
-    "mm-http>=0.0.1",
-    "mm-result>=0.0.2",
+    "mm-http~=0.1.0",
     "python-telegram-bot~=22.1",
 ]
 
@@ -18,10 +17,11 @@ dev-dependencies = [
     "pytest~=8.4.0",
     "pytest-asyncio~=1.0.0",
     "pytest-xdist~=3.7.0",
-    "ruff~=0.11.12",
+    "ruff~=0.11.13",
     "pip-audit~=2.9.0",
     "bandit~=1.8.3",
     "mypy~=1.16.0",
+    "pre-commit~=4.2.0",
     "python-dotenv>=1.1.0",
 ]
 [tool.mypy]
