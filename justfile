@@ -27,8 +27,7 @@ audit:
 publish: build lint audit test
     git diff-index --quiet HEAD
     uvx twine upload dist/**
-    git tag -a 'v{{version}}' -m 'v{{version}}'
-    git push origin v{{version}}
+    git tag -a 'v{{version}}' -m 'v{{version}}' && git push origin v{{version}}
 
 sync:
     uv sync --all-extras
