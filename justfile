@@ -14,9 +14,11 @@ format:
 test:
     uv run pytest -n auto tests
 
-lint: format
+lint: format pre-commit
     uv run ruff check src tests
+    uv run ty check
     uv run mypy src
+
 
 audit:
     uv export --no-dev --all-extras --format requirements-txt --no-emit-project > requirements.txt

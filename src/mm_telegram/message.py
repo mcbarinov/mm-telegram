@@ -40,11 +40,11 @@ async def send_message(
         res = await http_request(
             f"https://api.telegram.org/bot{bot_token}/sendMessage", method="post", json=params, timeout=timeout
         )
-        responses.append(res.to_dict())
+        responses.append(res.model_dump)
         if res.is_err():
-            return Result.err(res.error or "error sending message", extra={"responses": responses})
+            return Result.err(res.error_message or "error sending message", extra={"responses": responses})
 
-        message_id = res.parse_json_body("result.message_id", none_on_error=True)
+        message_id = res.parse_json("result.message_id", none_on_error=True)
         if message_id:
             result_message_ids.append(message_id)
         else:
