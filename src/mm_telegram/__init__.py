@@ -1,4 +1,5 @@
-from .bot import TelegramBot, TelegramHandler
-from .message import send_message
+"""Telegram bot library with type safety and async/await patterns."""
 
-__all__ = ["TelegramBot", "TelegramHandler", "send_message"]
+from .message import send_text_message as send_text_message
+from .private_bot import PrivateBot as PrivateBot
+from .private_bot import TelegramHandler as TelegramHandler

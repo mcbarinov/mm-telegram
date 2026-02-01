@@ -1,13 +1,13 @@
 # mm-telegram
 
-A Python library for building Telegram bots with type safety and modern async/await patterns.
+A Python library for building private Telegram bots that only respond to allowed users.
 
 ## Features
 
+- **Private by default**: Only allowed users can interact with the bot
 - **Type-safe**: Full type annotations with mypy strict mode support
 - **Async/await**: Built on python-telegram-bot with modern async patterns
 - **Message splitting**: Automatic handling of long messages (>4096 chars)
-- **Admin control**: Built-in admin authorization system
 - **Simple API**: Minimal boilerplate for common bot operations
 
 ## Quick Start
@@ -15,29 +15,29 @@ A Python library for building Telegram bots with type safety and modern async/aw
 ### Basic Bot
 
 ```python
-from mm_telegram import TelegramBot
+from mm_telegram import PrivateBot
 from telegram.ext import CommandHandler
 
 async def hello(update, context):
     await update.message.reply_text("Hello!")
 
-bot = TelegramBot(
+bot = PrivateBot(
     handlers=[CommandHandler("hello", hello)],
     bot_data={}
 )
 
-await bot.start(token="YOUR_BOT_TOKEN", admins=[YOUR_USER_ID])
+await bot.start(token="YOUR_BOT_TOKEN", allowed_users=[YOUR_USER_ID])
 ```
 
 ### Send Messages
 
 ```python
-from mm_telegram import send_message
+from mm_telegram import send_text_message
 
-result = await send_message(
+result = await send_text_message(
     bot_token="YOUR_BOT_TOKEN",
     chat_id=123456789,
-    message="Your message here"
+    text="Your message here"
 )
 
 if result.is_ok():
@@ -47,32 +47,32 @@ if result.is_ok():
 
 ## API Reference
 
-### TelegramBot
+### PrivateBot
 
-Main bot wrapper that manages application lifecycle.
+Private bot wrapper that only responds to allowed users.
 
 ```python
-bot = TelegramBot(handlers, bot_data)
-await bot.start(token, admins)
+bot = PrivateBot(handlers, bot_data)
+await bot.start(token, allowed_users)
 await bot.shutdown()
 ```
 
 - `handlers`: List of telegram handlers (CommandHandler, MessageHandler, etc.)
 - `bot_data`: Initial bot data dictionary
 - `token`: Bot token from @BotFather
-- `admins`: List of admin user IDs
+- `allowed_users`: List of user IDs allowed to use the bot
 
-### send_message
+### send_text_message
 
-Send messages with automatic splitting for long text.
+Send text messages with automatic splitting for long text.
 
 ```python
-result = await send_message(
+result = await send_text_message(
     bot_token="token",
     chat_id=123,
-    message="text",
+    text="text",
     timeout=5,
-    inter_message_delay_seconds=3
+    delay=3.0
 )
 ```
 
@@ -82,4 +82,3 @@ Returns `Result[list[int]]` with message IDs on success.
 
 - `/ping` - Responds with "pong"
 - Unknown commands - "Sorry, I didn't understand that command."
-- Admin check - Blocks non-admin users
