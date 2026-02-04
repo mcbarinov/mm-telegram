@@ -3,7 +3,7 @@
 ## Critical: Language
 RESPOND IN ENGLISH. Always. No exceptions.
 User's language does NOT determine your response language.
-Only switch if user EXPLICITLY requests it (e.g., "respond in Russian").
+Only switch if user EXPLICITLY requests it (e.g., "respond in {language}").
 Language switching applies ONLY to chat. All code, comments, commit messages, and files must ALWAYS be in English — no exceptions.
 
 ## Mandatory Rules (external)
